@@ -1,1 +1,368 @@
 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#123d2b">
+<meta name="description" content="منيو فوال ضواحي نجد العريق">
+<title>فوال ضواحي نجد العريق</title>
+
+<style>
+:root {
+  --green:#123d2b;
+  --green2:#1c563b;
+  --gold:#d6ad58;
+  --cream:#faf7ef;
+  --text:#26352b;
+  --muted:#777;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  font-family:Tahoma,Arial,sans-serif;
+  background:var(--cream);
+  color:var(--text);
+}
+header {
+  background:linear-gradient(135deg,#0d3022,#20563b);
+  color:white;
+  text-align:center;
+  padding:35px 15px 30px;
+  border-bottom:5px solid var(--gold);
+}
+.logo {
+  width:75px;height:75px;
+  margin:auto auto 12px;
+  border:2px solid var(--gold);
+  border-radius:50%;
+  display:grid;place-items:center;
+  font-size:36px;color:var(--gold);
+}
+header h1 { margin:8px 0; font-size:27px; }
+header p { margin:8px 0 0;color:#eadbb7;font-size:14px; }
+.container { max-width:950px;margin:auto;padding:18px 14px 110px; }
+.search {
+  width:100%;padding:14px 16px;
+  border:1px solid #ddd;border-radius:12px;
+  font-size:16px;margin:5px 0 18px;
+  outline-color:var(--gold);
+}
+.category-nav {
+  display:flex;gap:8px;overflow-x:auto;
+  padding:5px 0 16px;scrollbar-width:thin;
+}
+.category-nav button {
+  white-space:nowrap;border:1px solid #d7c69f;
+  background:white;color:var(--green);
+  border-radius:22px;padding:10px 15px;
+  cursor:pointer;font-weight:bold;
+}
+.category-nav button.active {
+  background:var(--green);color:white;
+  border-color:var(--green);
+}
+.section-title {
+  color:var(--green);font-size:21px;
+  border-right:4px solid var(--gold);
+  padding-right:12px;margin:27px 0 14px;
+}
+.menu-grid {
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.item {
+  background:white;border:1px solid #eee;
+  border-radius:14px;padding:14px;
+  box-shadow:0 3px 12px #00000008;
+}
+.item h3 { margin:0 0 8px;color:var(--green);font-size:16px; }
+.item p { margin:0 0 10px;color:var(--muted);font-size:12px;line-height:1.7; }
+.price { color:#986e20;font-weight:bold;font-size:14px; }
+.calories { color:#777;font-size:12px;margin-top:5px; }
+.item-footer {
+  display:flex;align-items:center;justify-content:space-between;
+  gap:8px;margin-top:12px;
+}
+.item input {
+  width:65px;padding:8px;border:1px solid #ddd;
+  border-radius:8px;text-align:center;
+}
+.add {
+  background:var(--green);color:white;border:0;
+  border-radius:8px;padding:9px 12px;cursor:pointer;
+}
+.add:active { transform:scale(.97); }
+.empty { color:#888;text-align:center;padding:20px; }
+.cart-bar {
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--green);color:white;
+  padding:13px 16px;display:flex;
+  justify-content:space-between;align-items:center;
+  box-shadow:0 -3px 15px #0002;z-index:5;
+}
+.cart-bar button {
+  background:var(--gold);color:#172b1e;
+  border:0;border-radius:9px;padding:11px 17px;
+  font-weight:bold;cursor:pointer;
+}
+.modal {
+  display:none;position:fixed;inset:0;
+  background:#0009;z-index:10;
+  align-items:flex-end;justify-content:center;
+}
+.modal.open { display:flex; }
+.modal-content {
+  background:white;width:100%;max-width:600px;
+  max-height:85vh;overflow:auto;
+  border-radius:20px 20px 0 0;padding:20px;
+}
+.modal-head {
+  display:flex;justify-content:space-between;align-items:center;
+}
+.close {
+  border:0;background:#eee;border-radius:50%;
+  width:35px;height:35px;font-size:20px;
+}
+.cart-row {
+  display:flex;justify-content:space-between;
+  align-items:center;gap:10px;
+  border-bottom:1px solid #eee;padding:12px 0;
+}
+.qty button {
+  border:0;background:#eee;border-radius:6px;
+  padding:5px 10px;cursor:pointer;
+}
+.total { font-size:19px;color:var(--green);font-weight:bold;margin:18px 0; }
+.whatsapp {
+  width:100%;background:#168b4c;color:white;
+  border:0;padding:14px;border-radius:10px;
+  font-size:16px;font-weight:bold;cursor:pointer;
+}
+footer { text-align:center;color:#888;font-size:12px;padding:25px; }
+@media(max-width:480px) {
+  .menu-grid { grid-template-columns:1fr; }
+  header h1 {font-size:23px;}
+}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="logo">♨</div>
+  <h1>فوال ضواحي نجد العريق</h1>
+  <p>أصالة الطعم النجدي... وجودة تستحق التجربة</p>
+</header>
+
+<main class="container">
+  <input id="search" class="search" placeholder="ابحث عن صنف..." oninput="render()">
+  <nav class="category-nav" id="nav"></nav>
+  <div id="menu"></div>
+</main>
+
+<div class="cart-bar">
+  <div>
+    <strong>سلة اختياراتك</strong>
+    <div id="cartSummary" style="font-size:12px;margin-top:4px">0 أصناف</div>
+  </div>
+  <button onclick="openCart()">عرض السلة 🛒</button>
+</div>
+
+<div class="modal" id="cartModal" onclick="if(event.target===this)closeCart()">
+  <div class="modal-content">
+    <div class="modal-head">
+      <h2>سلة اختياراتك</h2>
+      <button class="close" onclick="closeCart()">×</button>
+    </div>
+    <div id="cartItems"></div>
+    <div class="total" id="total">الإجمالي: 0 ريال</div>
+    <button class="whatsapp" onclick="sendWhatsApp()">إرسال الطلب عبر واتساب</button>
+    <p style="font-size:11px;color:#888;text-align:center">
+      يلزم ضبط رقم واتساب المطعم قبل استقبال الطلبات.
+    </p>
+  </div>
+</div>
+
+<footer>جميع الحقوق محفوظة © فوال ضواحي نجد العريق</footer>
+
+<script>
+const categories = [
+ {name:"الفول والمحروقات",items:[
+  "فول جرة","فول طاوة","كبدة طازجة","شكشوكة","فول جرة القلاية"
+ ]},
+ {name:"المطبق والعريكة والمعصوب",items:[
+  "مطبق مالح","مطبق لحم","خضار مع بيض ولحم مفروم",
+  "خضار مع لحم مفروم","فول مطبوخ مع البصل والطماط",
+  "كبدة طازجة مع البصل والطماط","بيض مع البصل والطماط",
+  "عريكة","خبز طاوة مع الشطة وعسل","عريكة ضواحي نجد",
+  "سحاوق جبن","معصوب ضواحي نجد"
+ ]},
+ {name:"الوجبات",items:[
+  "فحسة","خبز تميس","معصوب","خبز مشتون مع موز وعسل",
+  "مقلقل","شكشوكة عدني","قطع لحم أو دجاج طازجة",
+  "بيض طازج مع صلصة طماطم","رقائق الخبز على الصاج مع جبن سائل",
+  "رقائق الخبز على الصاج مع الموز","تقاطيع","لحسة",
+  "مطبق جبن سائل","مطبق موز","مطبق جبن مالح",
+  "مطبق مقلقل","لحم صغار مع كبدة","بيض طازج مع جبن سائل",
+  "رقائق الخبز على الصاج مع الخضار"
+ ]},
+ {name:"العدس والقلابة والفاصوليا",items:[
+  "عدس قلابة","عدس طاوة","عدس قلابة جرة",
+  "عدس مطبوخ مع البصل والطماط","فول قلابة",
+  "فاصوليا ناشفة","فول قلاية جرة","فاصوليا بيضاء ناشفة",
+  "مشكل صنعاني","فاصوليا رطب","مشكل حضرمي","بيض فرن",
+  "مطبق لبنة","مطبق تونة","فتة سمن عسل","فول مع البيض",
+  "فاصوليا حمراء رطب","كبدة ولحم صغار مع فاصوليا",
+  "بيض مطبوخ داخل الفرن","خضار مع تونة",
+  "بازيليا","بازيليا مع الطماط والبصل","مشكل عدني",
+  "فول مع تونة","تونة"
+ ]},
+ {name:"الإضافات",items:[
+  "مكسرات","كورن فليكس","حليب نستله","عقدة",
+  "مكس خضار مع الدجاج","فتة سمن وعسل"
+ ]},
+ {name:"المشروبات",items:[
+  "شاهي أحمر","حليب عدني","مشروبات غازية","ماء"
+ ]}
+];
+
+const prices = {};
+const calories = {};
+const descriptions = {};
+let cart = {};
+let activeCategory = "الكل";
+
+function keyOf(cat,name) { return cat+"::"+name; }
+
+function navRender() {
+ const nav=document.getElementById("nav");
+ nav.innerHTML="";
+ ["الكل",...categories.map(c=>c.name)].forEach(name=>{
+  const b=document.createElement("button");
+  b.textContent=name;
+  b.className=activeCategory===name?"active":"";
+  b.onclick=()=>{activeCategory=name;navRender();render();};
+  nav.appendChild(b);
+ });
+}
+
+function render() {
+ const q=document.getElementById("search").value.trim().toLowerCase();
+ const root=document.getElementById("menu");
+ root.innerHTML="";
+ let count=0;
+
+ categories.forEach(cat=>{
+  if(activeCategory!=="الكل" && activeCategory!==cat.name)return;
+  const matches=cat.items.filter(n=>n.toLowerCase().includes(q));
+  if(!matches.length)return;
+  const section=document.createElement("section");
+  const title=document.createElement("h2");
+  title.className="section-title";
+  title.textContent=cat.name;
+  section.appendChild(title);
+
+  const grid=document.createElement("div");
+  grid.className="menu-grid";
+
+  matches.forEach(name=>{
+   count++;
+   const key=keyOf(cat.name,name);
+   const card=document.createElement("article");
+   card.className="item";
+
+   const h=document.createElement("h3");
+   h.textContent=name;
+   const desc=document.createElement("p");
+   desc.textContent=descriptions[key]||"من قائمة فوال ضواحي نجد العريق";
+   const price=document.createElement("div");
+   price.className="price";
+   price.textContent=prices[key] ? prices[key]+" ريال" : "السعر يحدد من المطعم";
+   const cal=document.createElement("div");
+   cal.className="calories";
+   cal.textContent=calories[key] ? calories[key]+" سعرة حرارية" : "السعرات الحرارية غير محددة";
+
+   const footer=document.createElement("div");
+   footer.className="item-footer";
+   const qty=document.createElement("input");
+   qty.type="number";qty.min="1";qty.value="1";
+   qty.setAttribute("aria-label","الكمية");
+   const add=document.createElement("button");
+   add.className="add";add.textContent="أضف للسلة";
+   add.onclick=()=>addToCart(key,name,Number(qty.value));
+   footer.append(qty,add);
+   card.append(h,desc,price,cal,footer);
+   grid.appendChild(card);
+  });
+  section.appendChild(grid);
+  root.appendChild(section);
+ });
+ if(!count)root.innerHTML='<div class="empty">لم نجد أصنافاً مطابقة للبحث.</div>';
+}
+
+function addToCart(key,name,qty) {
+ if(!Number.isFinite(qty)||qty<1){alert("أدخل كمية صحيحة");return;}
+ if(!cart[key])cart[key]={name,qty:0};
+ cart[key].qty+=Math.floor(qty);
+ updateCart();
+}
+
+function updateCart() {
+ const count=Object.values(cart).reduce((s,x)=>s+x.qty,0);
+ document.getElementById("cartSummary").textContent=count+" صنف";
+}
+
+function openCart() {
+ const box=document.getElementById("cartItems");
+ box.innerHTML="";
+ let total=0,hasUnknown=false;
+ Object.entries(cart).forEach(([key,item])=>{
+  const p=Number(prices[key]);
+  if(!Number.isFinite(p)||p<=0)hasUnknown=true;
+  else total+=p*item.qty;
+  const row=document.createElement("div");
+  row.className="cart-row";
+  const name=document.createElement("span");
+  name.textContent=item.name+" × "+item.qty;
+  const controls=document.createElement("span");
+  controls.className="qty";
+  const minus=document.createElement("button");
+  minus.textContent="−";
+  minus.onclick=()=>changeQty(key,-1);
+  const plus=document.createElement("button");
+  plus.textContent="+";
+  plus.onclick=()=>changeQty(key,1);
+  controls.append(minus,plus);
+  row.append(name,controls);
+  box.appendChild(row);
+ });
+ if(!Object.keys(cart).length)box.innerHTML='<p class="empty">السلة فارغة حالياً</p>';
+ document.getElementById("total").textContent=
+  "الإجمالي: "+(hasUnknown?"يحدد بعد إدخال الأسعار":total.toFixed(2)+" ريال");
+ document.getElementById("cartModal").classList.add("open");
+}
+function closeCart(){document.getElementById("cartModal").classList.remove("open");}
+function changeQty(key,delta){
+ if(!cart[key])return;
+ cart[key].qty+=delta;
+ if(cart[key].qty<=0)delete cart[key];
+ updateCart();openCart();
+}
+
+function sendWhatsApp() {
+ if(!Object.keys(cart).length){alert("السلة فارغة");return;}
+ const phone=""; // ضع رقم واتساب المطعم مع مفتاح الدولة، دون علامة +
+ if(!phone){alert("لم تتم إضافة رقم واتساب المطعم بعد.");return;}
+ let msg="طلب جديد - فوال ضواحي نجد العريق%0A";
+ Object.entries(cart).forEach(([key,item])=>{
+  msg+=encodeURIComponent(item.name+" × "+item.qty)+"%0A";
+ });
+ window.open("https://wa.me/"+phone+"?text="+msg,"_blank");
+}
+
+navRender();
+render();
+</script>
+</body>
+</html>
+
